@@ -17,30 +17,24 @@ import me.dionclei.webflux.services.PlaylistService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@RestController
-@RequestMapping("/playlists")
 public class PlaylistController {
 	
 	@Autowired
 	private PlaylistService playlistService;
 	
-	@GetMapping
-	public Mono<ResponseEntity<Flux<Playlist>>> findAll() {
-		return Mono.just(ResponseEntity.ok(playlistService.findAll()));
+	@GetMapping("/playlist")
+	public Flux<Playlist> findAll() {
+		return playlistService.findAll();
 	}
 	
-	@GetMapping("/{id}")
-	public Mono<ResponseEntity<Playlist>> findById(@PathVariable String id) {
-		return playlistService.findById(id).map(ResponseEntity::ok);
+	@GetMapping("/playlist/{id}")
+	public Mono<Playlist> findById(@PathVariable String id) {
+		return playlistService.findById(id);
 	}
 	
-	@PostMapping
-	public Mono<ResponseEntity<Playlist>> save(@RequestBody Playlist playlist, ServerHttpRequest request) {
-	    return playlistService.save(playlist) 
-	        .map(savedPlaylist -> ResponseEntity
-	            .created(URI.create(request.getURI().toString() + "/" + savedPlaylist.getId()))
-	            .body(savedPlaylist)
-	        );
+	@PostMapping("/playlist")
+	public Mono<Playlist> save(@RequestBody Playlist playlist, ServerHttpRequest request) {
+	    return playlistService.save(playlist);
 	}
 	
 }
