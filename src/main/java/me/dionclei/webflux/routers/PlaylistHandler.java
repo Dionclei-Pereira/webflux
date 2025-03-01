@@ -1,4 +1,4 @@
-package me.dionclei.webflux;
+package me.dionclei.webflux.routers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 import static org.springframework.web.reactive.function.BodyInserters.fromPublisher;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
-//@Component
+@Component
 public class PlaylistHandler {
 	
 	@Autowired
