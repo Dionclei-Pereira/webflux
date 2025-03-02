@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import me.dionclei.webflux.documents.Song;
 import me.dionclei.webflux.repositories.SongRepository;
 import me.dionclei.webflux.services.SongService;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -14,6 +15,10 @@ public class SongServiceImpl implements SongService{
 	
 	public SongServiceImpl(SongRepository songRepository) {
 		this.songRepository = songRepository;
+	}
+	
+	public Flux<Song> findAll() {
+		return songRepository.findAll();
 	}
 	
 	public Mono<Song> save(Song song) {

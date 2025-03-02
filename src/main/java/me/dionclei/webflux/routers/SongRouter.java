@@ -15,6 +15,7 @@ public class SongRouter {
 	@Bean
 	RouterFunction<ServerResponse> routeSongs(SongHandler handler) {
 		return RouterFunctions.route(POST("songs").and(accept(MediaType.APPLICATION_JSON)), handler::save)
-				.andRoute(GET("songs/{id}").and(accept(MediaType.APPLICATION_JSON)), handler::findById);
+				.andRoute(GET("songs/{id}").and(accept(MediaType.APPLICATION_JSON)), handler::findById)
+				.andRoute(GET("songs"), handler::findAll);
 	}
 }

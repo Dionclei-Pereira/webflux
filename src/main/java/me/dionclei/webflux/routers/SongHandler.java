@@ -20,6 +20,11 @@ public class SongHandler {
 		this.songService = songService;
 	}
 	
+	public Mono<ServerResponse> findAll(ServerRequest request) {
+		var songs = songService.findAll();
+		return ok().body(songs, Song.class);
+	}
+	
 	public Mono<ServerResponse> findById(ServerRequest request) {
 		var song = songService.findById(request.pathVariable("id"));
 		return ok().body(song, Song.class);
