@@ -1,0 +1,30 @@
+package me.dionclei.webflux.enums;
+
+public enum Gender {
+    ROCK,
+    COUNTRY,
+    POP,
+    HIP_HOP,
+    JAZZ,
+    CLASSICAL,
+    ELECTRONIC,
+    BLUES,
+    REGGAE,
+    METAL,
+    PUNK,
+    FOLK,
+    ALTERNATIVE,
+    INDIE,
+    DANCE,
+    SOUL,
+    FUNK,
+    GOSPEL,
+    LATIN,
+    K_POP,
+    J_POP,
+    WORLD,
+    AMBIENT,
+    EXPERIMENTAL,
+    GRUNGE,
+    DISCO
+}

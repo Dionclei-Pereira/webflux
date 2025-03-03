@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import me.dionclei.webflux.documents.Playlist;
+import me.dionclei.webflux.enums.Gender;
 import me.dionclei.webflux.repositories.PlaylistRepository;
 import me.dionclei.webflux.services.PlaylistService;
 import reactor.core.publisher.Flux;
@@ -20,6 +21,10 @@ public class PlaylistServiceImpl implements PlaylistService{
 		return playlistRepository.findAll();
 	}
 
+	public Flux<Playlist> findByGender(Gender gender) {
+		return playlistRepository.findByGendersContaining(gender);
+	}
+	
 	@Override
 	public Mono<Playlist> findById(String id) {
 		return playlistRepository.findById(id);
