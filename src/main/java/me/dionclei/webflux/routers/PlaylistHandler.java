@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import me.dionclei.webflux.documents.Playlist;
+import me.dionclei.webflux.documents.Song;
 import me.dionclei.webflux.enums.Gender;
 import me.dionclei.webflux.services.PlaylistService;
 import reactor.core.publisher.Mono;
@@ -29,6 +30,11 @@ public class PlaylistHandler {
 		}
 		
 		return ok().contentType(MediaType.APPLICATION_JSON).body(service.findAll(), Playlist.class);
+	}
+	
+	public Mono<ServerResponse> getSongsFromPlaylist(ServerRequest request) {
+		String id = request.pathVariable("id");
+		return ok().body(service.getSongsFromPlaylist(id), Song.class);
 	}
 	
 	public Mono<ServerResponse> findById(ServerRequest request) {

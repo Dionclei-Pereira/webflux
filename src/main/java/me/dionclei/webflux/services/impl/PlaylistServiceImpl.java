@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import me.dionclei.webflux.documents.Playlist;
+import me.dionclei.webflux.documents.Song;
 import me.dionclei.webflux.enums.Gender;
 import me.dionclei.webflux.repositories.PlaylistRepository;
+import me.dionclei.webflux.repositories.SongRepository;
 import me.dionclei.webflux.services.PlaylistService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,7 +18,9 @@ public class PlaylistServiceImpl implements PlaylistService{
 	@Autowired
 	private PlaylistRepository playlistRepository;
 	
-	@Override
+	@Autowired
+	private SongRepository songRepository;
+	
 	public Flux<Playlist> findAll() {
 		return playlistRepository.findAll();
 	}
@@ -25,14 +29,16 @@ public class PlaylistServiceImpl implements PlaylistService{
 		return playlistRepository.findByGendersContaining(gender);
 	}
 	
-	@Override
 	public Mono<Playlist> findById(String id) {
 		return playlistRepository.findById(id);
 	}
-
-	@Override
+	
 	public Mono<Playlist> save(Playlist playlist) {
 		return playlistRepository.save(playlist);
+	}
+	
+	public Flux<Song> getSongsFromPlaylist(String PlaylistId) {
+		return findById(PlaylistId).flatMapMany(playlist -> Flux.fromIterable(playlist.getSongs())).flatMap(songRepository::findById);
 	}
 	
 }

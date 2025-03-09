@@ -15,15 +15,17 @@ public class Playlist {
 	private String name;
 	private String author;
 	private Set<Gender> genders;
+	private Set<String> songs;
 	
 	public Playlist() {}
 	
-	public Playlist(String id, String name, String author, Set<Gender> genders) {
+	public Playlist(String id, String name, String author, Set<Gender> genders, Set<String> songs) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.author = author;
 		this.genders = genders;
+		this.songs = songs;
 	}
 	
 	public String getAuthor() {
@@ -57,4 +59,13 @@ public class Playlist {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public Set<String> getSongs() {
+		return songs;
+	}
+
+	public void setSongs(Set<String> songs) {
+		this.songs = songs;
+	}
+	
 }

@@ -30,17 +30,21 @@ public class SeedRunner implements CommandLineRunner {
 	    	playlistRepository.deleteAll().subscribe();
 	    	Set<Gender> aux = new HashSet<>();
 	    	aux.add(Gender.ROCK);
-	        Playlist p1 = new Playlist(UUID.randomUUID().toString(), "Van Halen", "Dionclei", aux);
+	        Playlist p1 = new Playlist(UUID.randomUUID().toString(), "Van Halen", "Dionclei", aux, new HashSet<>());
 	        aux = new HashSet<>();
 	        aux.add(Gender.METAL);
-	        Playlist p2 = new Playlist(UUID.randomUUID().toString(), "The Best Metal", "Dionclei", aux);
-	    	playlistRepository.saveAll(Arrays.asList(p1, p2)).subscribe();
+	        Playlist p2 = new Playlist(UUID.randomUUID().toString(), "The Best Metal", "Dionclei", aux, new HashSet<>());
 	        
 	    	songRepository.deleteAll().subscribe();
 	    	aux = new HashSet<>();
 	    	aux.add(Gender.ROCK);
 	    	Song s1 = new Song(UUID.randomUUID().toString(), "D.O.A", "Van Halen", "Van Halen II", "https://open.spotify.com/track/5tLbWNYxXdGRQQmW7LtWjg", aux);
 	    	Song s2 = new Song(UUID.randomUUID().toString(), "Eruption", "Van Halen", "Van Halen I", "https://open.spotify.com/track/3lW0MLws0srqqR3DRRPLZp", aux);
+	    	Set<String> aux2 = new HashSet<>();
+	    	aux2.add(s2.getId());
+	    	p2.setSongs(aux2);
+	    	
 	    	songRepository.saveAll(Arrays.asList(s1, s2)).subscribe();
+	    	playlistRepository.saveAll(Arrays.asList(p1, p2)).subscribe();
 	    }
 }
