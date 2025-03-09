@@ -32,6 +32,14 @@ public class PlaylistHandler {
 		return ok().contentType(MediaType.APPLICATION_JSON).body(service.findAll(), Playlist.class);
 	}
 	
+	public Mono<ServerResponse> addSongToPlaylist(ServerRequest request) {
+		String playlistId = request.pathVariable("playlistId");
+		String songId = request.pathVariable("songId");
+		var playlist = service.addSong(playlistId, songId);
+		return ok().contentType(MediaType.APPLICATION_JSON).body(playlist, Playlist.class);
+		
+	}
+	
 	public Mono<ServerResponse> getSongsFromPlaylist(ServerRequest request) {
 		String id = request.pathVariable("id");
 		return ok().body(service.getSongsFromPlaylist(id), Song.class);

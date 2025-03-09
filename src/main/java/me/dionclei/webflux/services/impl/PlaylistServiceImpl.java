@@ -41,4 +41,16 @@ public class PlaylistServiceImpl implements PlaylistService{
 		return findById(PlaylistId).flatMapMany(playlist -> Flux.fromIterable(playlist.getSongs())).flatMap(songRepository::findById);
 	}
 	
+	public Mono<Playlist> addSong(String playlistId, String songId) {
+	    return songRepository.findById(songId)
+	            .switchIfEmpty(Mono.error(new IllegalArgumentException("Song not found")))
+	            .flatMap(song -> findById(playlistId)
+	                    .map(playlist -> {
+	                        playlist.addSong(songId);
+	                        return playlist;
+	                    })
+	                    .flatMap(playlistRepository::save)
+	            );
+	}
+	
 }

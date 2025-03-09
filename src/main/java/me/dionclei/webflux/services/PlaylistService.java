@@ -18,4 +18,6 @@ public interface PlaylistService {
 	
 	Flux<Song> getSongsFromPlaylist(String id);
 	
+	Mono<Playlist> addSong(String playlistId, String songId);
+	
 }

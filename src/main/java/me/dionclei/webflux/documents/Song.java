@@ -1,6 +1,5 @@
 package me.dionclei.webflux.documents;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;

@@ -60,6 +60,11 @@ public class Playlist {
 		this.name = name;
 	}
 
+	public Set<String> addSong(String SongId) {
+		songs.add(SongId);
+		return getSongs();
+	}
+	
 	public Set<String> getSongs() {
 		return songs;
 	}
