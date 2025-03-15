@@ -11,6 +11,8 @@ import me.dionclei.webflux.repositories.SongRepository;
 import me.dionclei.webflux.services.PlaylistService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 public class PlaylistServiceImpl implements PlaylistService{
@@ -22,23 +24,23 @@ public class PlaylistServiceImpl implements PlaylistService{
 	private SongRepository songRepository;
 	
 	public Flux<Playlist> findAll() {
-		return playlistRepository.findAll();
+		return playlistRepository.findAll().subscribeOn(Schedulers.boundedElastic());
 	}
 
 	public Flux<Playlist> findByGender(Gender gender) {
-		return playlistRepository.findByGendersContaining(gender);
+		return playlistRepository.findByGendersContaining(gender).subscribeOn(Schedulers.boundedElastic());
 	}
 	
 	public Mono<Playlist> findById(String id) {
-		return playlistRepository.findById(id);
+		return playlistRepository.findById(id).subscribeOn(Schedulers.boundedElastic());
 	}
 	
 	public Mono<Playlist> save(Playlist playlist) {
-		return playlistRepository.save(playlist);
+		return playlistRepository.save(playlist).subscribeOn(Schedulers.boundedElastic());
 	}
 	
 	public Flux<Song> getSongsFromPlaylist(String PlaylistId) {
-		return findById(PlaylistId).flatMapMany(playlist -> Flux.fromIterable(playlist.getSongs())).flatMap(songRepository::findById);
+		return findById(PlaylistId).flatMapMany(playlist -> Flux.fromIterable(playlist.getSongs())).flatMap(songRepository::findById).subscribeOn(Schedulers.boundedElastic());
 	}
 	
 	public Mono<Playlist> addSong(String playlistId, String songId) {
@@ -50,7 +52,7 @@ public class PlaylistServiceImpl implements PlaylistService{
 	                        return playlist;
 	                    })
 	                    .flatMap(playlistRepository::save)
-	            );
+	            ).subscribeOn(Schedulers.boundedElastic());
 	}
 	
 }

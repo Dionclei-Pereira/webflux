@@ -8,6 +8,7 @@ import me.dionclei.webflux.repositories.SongRepository;
 import me.dionclei.webflux.services.SongService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 public class SongServiceImpl implements SongService{
@@ -19,19 +20,19 @@ public class SongServiceImpl implements SongService{
 	}
 	
 	public Flux<Song> findByGender(Gender gender) {
-		return songRepository.findByGendersContaining(gender);
+		return songRepository.findByGendersContaining(gender).subscribeOn(Schedulers.boundedElastic());
 	}
 	
 	public Flux<Song> findAll() {
-		return songRepository.findAll();
+		return songRepository.findAll().subscribeOn(Schedulers.boundedElastic());
 	}
 	
 	public Mono<Song> save(Song song) {
-		return Mono.just(song).flatMap(songRepository::save);
+		return Mono.just(song).flatMap(songRepository::save).subscribeOn(Schedulers.boundedElastic());
 	}
 	
 	public Mono<Song> findById(String id) {
-		return songRepository.findById(id).switchIfEmpty(Mono.error(new RuntimeException("Song not found")));
+		return songRepository.findById(id).switchIfEmpty(Mono.error(new RuntimeException("Song not found"))).subscribeOn(Schedulers.boundedElastic());
 	}
 	
 }
