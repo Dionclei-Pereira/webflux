@@ -3,6 +3,7 @@ package me.dionclei.webflux.documents;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import me.dionclei.webflux.enums.Gender;

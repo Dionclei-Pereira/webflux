@@ -11,9 +11,11 @@ import org.springframework.stereotype.Component;
 
 import me.dionclei.webflux.documents.Playlist;
 import me.dionclei.webflux.documents.Song;
+import me.dionclei.webflux.documents.User;
 import me.dionclei.webflux.enums.Gender;
 import me.dionclei.webflux.repositories.PlaylistRepository;
 import me.dionclei.webflux.repositories.SongRepository;
+import me.dionclei.webflux.repositories.UserRepository;
 import reactor.core.publisher.Flux;
 
 
@@ -24,10 +26,13 @@ public class SeedRunner implements CommandLineRunner {
 		private PlaylistRepository playlistRepository;
 		@Autowired
 		private SongRepository songRepository;
-	
+		@Autowired
+		private UserRepository userRepository; 
+		
 	    @Override
 	    public void run(String... args) throws Exception {
 	    	playlistRepository.deleteAll().subscribe();
+	    	userRepository.deleteAll().subscribe();
 	    	Set<Gender> aux = new HashSet<>();
 	    	aux.add(Gender.ROCK);
 	        Playlist p1 = new Playlist(UUID.randomUUID().toString(), "Van Halen", "Dionclei", aux, new HashSet<>());
@@ -44,7 +49,17 @@ public class SeedRunner implements CommandLineRunner {
 	    	aux2.add(s2.getId());
 	    	p2.setSongs(aux2);
 	    	
+	    	Set<Song> songs = new HashSet<>();
+	    	songs.addAll(Arrays.asList(s1, s2));
+	    	
+	    	Set<Playlist> playlists = new HashSet<>();
+	    	playlists.addAll(Arrays.asList(p1, p2));
+	    	
+	    	User u1 = new User(UUID.randomUUID().toString(), "Dionclei", "dionclei@gmail.com", "12345678", songs, playlists);
+	    	
+	    	userRepository.save(u1).subscribe();
 	    	songRepository.saveAll(Arrays.asList(s1, s2)).subscribe();
 	    	playlistRepository.saveAll(Arrays.asList(p1, p2)).subscribe();
+	    	
 	    }
 }
