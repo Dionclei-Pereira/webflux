@@ -3,7 +3,7 @@ package me.dionclei.webflux.services.impl;
 import org.springframework.stereotype.Service;
 
 import me.dionclei.webflux.documents.Song;
-import me.dionclei.webflux.enums.Gender;
+import me.dionclei.webflux.enums.Genre;
 import me.dionclei.webflux.repositories.SongRepository;
 import me.dionclei.webflux.services.SongService;
 import reactor.core.publisher.Flux;
@@ -19,8 +19,8 @@ public class SongServiceImpl implements SongService{
 		this.songRepository = songRepository;
 	}
 	
-	public Flux<Song> findByGender(Gender gender) {
-		return songRepository.findByGendersContaining(gender).subscribeOn(Schedulers.boundedElastic());
+	public Flux<Song> findByGenre(Genre genre) {
+		return songRepository.findByGenresContaining(genre).subscribeOn(Schedulers.boundedElastic());
 	}
 	
 	public Flux<Song> findAll() {

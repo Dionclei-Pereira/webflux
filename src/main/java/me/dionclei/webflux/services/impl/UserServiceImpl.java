@@ -9,6 +9,7 @@ import me.dionclei.webflux.repositories.UserRepository;
 import me.dionclei.webflux.services.UserService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,15 +18,15 @@ public class UserServiceImpl implements UserService {
 	private UserRepository repository;
 	
 	public Mono<UserDTO> save(User user) {
-		return repository.save(user).map(u -> u.toDTO());
+		return repository.save(user).map(u -> u.toDTO()).subscribeOn(Schedulers.boundedElastic());
 	}
 
 	public Mono<UserDTO> findById(String id) {
-		return repository.findById(id).map(u -> u.toDTO());
+		return repository.findById(id).map(u -> u.toDTO()).subscribeOn(Schedulers.boundedElastic());
 	}
 
 	public Flux<UserDTO> findAll() {
-		return repository.findAll().map(u -> u.toDTO());
+		return repository.findAll().map(u -> u.toDTO()).subscribeOn(Schedulers.boundedElastic());
 	}
 
 }

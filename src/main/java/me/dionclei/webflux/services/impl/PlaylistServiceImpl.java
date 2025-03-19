@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import me.dionclei.webflux.documents.Playlist;
 import me.dionclei.webflux.documents.Song;
-import me.dionclei.webflux.enums.Gender;
+import me.dionclei.webflux.enums.Genre;
 import me.dionclei.webflux.repositories.PlaylistRepository;
 import me.dionclei.webflux.repositories.SongRepository;
 import me.dionclei.webflux.services.PlaylistService;
@@ -27,8 +27,8 @@ public class PlaylistServiceImpl implements PlaylistService{
 		return playlistRepository.findAll().subscribeOn(Schedulers.boundedElastic());
 	}
 
-	public Flux<Playlist> findByGender(Gender gender) {
-		return playlistRepository.findByGendersContaining(gender).subscribeOn(Schedulers.boundedElastic());
+	public Flux<Playlist> findByGenre(Genre genre) {
+		return playlistRepository.findByGenresContaining(genre).subscribeOn(Schedulers.boundedElastic());
 	}
 	
 	public Mono<Playlist> findById(String id) {

@@ -1,6 +1,6 @@
 package me.dionclei.webflux.enums;
 
-public enum Gender {
+public enum Genre {
     ROCK,
     COUNTRY,
     POP,

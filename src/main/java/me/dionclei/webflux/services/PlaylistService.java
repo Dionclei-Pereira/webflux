@@ -2,7 +2,7 @@ package me.dionclei.webflux.services;
 
 import me.dionclei.webflux.documents.Playlist;
 import me.dionclei.webflux.documents.Song;
-import me.dionclei.webflux.enums.Gender;
+import me.dionclei.webflux.enums.Genre;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -14,7 +14,7 @@ public interface PlaylistService {
 	
 	Mono<Playlist> save(Playlist playlist);
 	
-	Flux<Playlist> findByGender(Gender gender);
+	Flux<Playlist> findByGenre(Genre genre);
 	
 	Flux<Song> getSongsFromPlaylist(String id);
 	

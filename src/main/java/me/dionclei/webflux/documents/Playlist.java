@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import me.dionclei.webflux.enums.Gender;
+import me.dionclei.webflux.enums.Genre;
 
 @Document
 public class Playlist {
@@ -15,17 +15,17 @@ public class Playlist {
 	private String id;
 	private String name;
 	private String author;
-	private Set<Gender> genders;
+	private Set<Genre> genres;
 	private Set<String> songs;
 	
 	public Playlist() {}
 	
-	public Playlist(String id, String name, String author, Set<Gender> genders, Set<String> songs) {
+	public Playlist(String id, String name, String author, Set<Genre> genres, Set<String> songs) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.author = author;
-		this.genders = genders;
+		this.genres = genres;
 		this.songs = songs;
 	}
 	
@@ -37,12 +37,12 @@ public class Playlist {
 		this.author = author;
 	}
 
-	public Set<Gender> getGenders() {
-		return genders;
+	public Set<Genre> getGenres() {
+		return genres;
 	}
 
-	public void setGenders(Set<Gender> genders) {
-		this.genders = genders;
+	public void setGenres(Set<Genre> genres) {
+		this.genres = genres;
 	}
 
 	public String getId() {

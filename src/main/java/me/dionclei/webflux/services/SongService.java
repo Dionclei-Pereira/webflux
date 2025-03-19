@@ -1,7 +1,7 @@
 package me.dionclei.webflux.services;
 
 import me.dionclei.webflux.documents.Song;
-import me.dionclei.webflux.enums.Gender;
+import me.dionclei.webflux.enums.Genre;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -13,6 +13,6 @@ public interface SongService {
 	
 	Flux<Song> findAll();
 	
-	Flux<Song> findByGender(Gender gender);
+	Flux<Song> findByGenre(Genre genre);
 	
 }

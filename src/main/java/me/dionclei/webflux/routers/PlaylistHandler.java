@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import me.dionclei.webflux.documents.Playlist;
 import me.dionclei.webflux.documents.Song;
-import me.dionclei.webflux.enums.Gender;
+import me.dionclei.webflux.enums.Genre;
 import me.dionclei.webflux.services.PlaylistService;
 import reactor.core.publisher.Mono;
 import static org.springframework.web.reactive.function.BodyInserters.fromPublisher;
@@ -21,12 +21,12 @@ public class PlaylistHandler {
 	PlaylistService service;
 	
 	public Mono<ServerResponse> findAll(ServerRequest request) {
-		var genderStr = request.queryParam("gender");
-		if (genderStr.isPresent()) {
-			Gender gender = genderStr.map(String::toUpperCase)
-            .map(Gender::valueOf)
+		var genreStr = request.queryParam("gender");
+		if (genreStr.isPresent()) {
+			Genre genre = genreStr.map(String::toUpperCase)
+            .map(Genre::valueOf)
             .orElse(null);
-			return ok().body(service.findByGender(gender), Playlist.class);
+			return ok().body(service.findByGenre(genre), Playlist.class);
 		}
 		
 		return ok().contentType(MediaType.APPLICATION_JSON).body(service.findAll(), Playlist.class);

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import me.dionclei.webflux.documents.Song;
-import me.dionclei.webflux.enums.Gender;
+import me.dionclei.webflux.enums.Genre;
 import me.dionclei.webflux.services.SongService;
 import reactor.core.publisher.Mono;
 import static org.springframework.web.reactive.function.BodyInserters.fromPublisher;
@@ -24,12 +24,12 @@ public class SongHandler {
 	}
 	
 	public Mono<ServerResponse> findAll(ServerRequest request) {
-		Optional<String> genderStr = request.queryParam("gender");
-		if (genderStr.isPresent()) {
-			Gender gender = genderStr.map(String::toUpperCase)
-                    .map(Gender::valueOf)
+		Optional<String> genreStr = request.queryParam("gender");
+		if (genreStr.isPresent()) {
+			Genre genre = genreStr.map(String::toUpperCase)
+                    .map(Genre::valueOf)
                     .orElse(null);
-			var songs = songService.findByGender(gender);
+			var songs = songService.findByGenre(genre);
 			return ok().body(songs, Song.class);
 		}
 		var songs = songService.findAll();
