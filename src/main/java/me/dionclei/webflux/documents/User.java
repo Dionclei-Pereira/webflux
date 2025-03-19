@@ -1,5 +1,6 @@
 package me.dionclei.webflux.documents;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,8 +18,8 @@ public class User {
 	private String name;
 	private String email;
 	private String password;
-	private Set<Song> favoriteSongs;
-	private Set<Playlist> playlists;
+	private Set<Song> favoriteSongs = new HashSet<>();
+	private Set<Playlist> playlists = new HashSet<>();
 	
 	public User() {
 		super();

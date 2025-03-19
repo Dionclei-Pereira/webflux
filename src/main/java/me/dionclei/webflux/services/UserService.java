@@ -12,5 +12,5 @@ public interface UserService {
 	Mono<UserDTO> findById(String id);
 	
 	Flux<UserDTO> findAll();
-	
+
 }

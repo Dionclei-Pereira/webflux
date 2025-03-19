@@ -1,5 +1,6 @@
 package me.dionclei.webflux.documents;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
@@ -15,8 +16,8 @@ public class Playlist {
 	private String id;
 	private String name;
 	private String author;
-	private Set<Genre> genres;
-	private Set<String> songs;
+	private Set<Genre> genres = new HashSet<>();
+	private Set<String> songs = new HashSet<>();
 	
 	public Playlist() {}
 	
