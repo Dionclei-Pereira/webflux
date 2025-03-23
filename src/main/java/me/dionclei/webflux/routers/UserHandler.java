@@ -40,6 +40,34 @@ public class UserHandler {
 				.onErrorResume(e -> notFound().build());
 	}
 	
+	public Mono<ServerResponse> findFavoriteSongs(ServerRequest request) {
+		String id = request.pathVariable("id");
+		return service.getFavoriteSongsByUserId(id)
+				.flatMap(songs -> ok().bodyValue(songs))
+				.switchIfEmpty(Mono.error(new ResourceNotFound("User not found")))
+				.onErrorResume(e -> notFound().build());
+	}
+	
+	public Mono<ServerResponse> removeSongToFavorites(ServerRequest request) {
+	    String userId = request.pathVariable("userId");
+	    String songId = request.pathVariable("songId");
+	    return service.removeSongFromFavorites(userId, songId)
+	            .collectList()
+	            .flatMap(songs -> 
+	                ServerResponse.ok()
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .bodyValue(songs)
+	            )
+	            .onErrorResume(IllegalArgumentException.class, e -> 
+	                ServerResponse.badRequest()
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .bodyValue("Song or Playlist not found")
+	            )
+	            .switchIfEmpty(
+	                ServerResponse.notFound().build()
+	            );
+	}
+	
 	public Mono<ServerResponse> addSongToFavorites(ServerRequest request) {
 	    String userId = request.pathVariable("userId");
 	    String songId = request.pathVariable("songId");

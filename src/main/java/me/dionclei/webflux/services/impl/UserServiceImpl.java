@@ -1,5 +1,7 @@
 package me.dionclei.webflux.services.impl;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,12 +42,27 @@ public class UserServiceImpl implements UserService {
 	                    .map(user -> {
 	                    	var aux = user.getFavoriteSongs();
 	                    	aux.add(song);
-	                    	repository.save(user);
 	                        return user;
 	                    })
 	                    .flatMap(repository::save).map(u -> u.getFavoriteSongs())
 	            ).flatMapMany(Flux::fromIterable)
 	            .subscribeOn(Schedulers.boundedElastic());
+	}
+	
+	public Flux<Song> removeSongFromFavorites(String userId, String songId) {
+	    return repository.findById(userId)
+	    		.flatMap(u -> {
+	    			var songs = u.getFavoriteSongs();
+	    			songs.removeIf(s -> s.getId().equals(songId));
+	    			u.setFavoriteSongs(songs);
+	    			return repository.save(u);
+	    		}).map(u -> u.getFavoriteSongs())
+	    		.flatMapMany(Flux::fromIterable);
+	}
+
+	public Mono<Set<Song>> getFavoriteSongsByUserId(String userId) {
+	    return repository.findById(userId)
+	            .map(user -> user.getFavoriteSongs());
 	}
 
 }
