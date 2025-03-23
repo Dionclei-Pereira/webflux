@@ -50,7 +50,7 @@ public class SeedRunner implements CommandLineRunner {
 	    	p2.setSongs(aux2);
 	    	
 	    	Set<Song> songs = new HashSet<>();
-	    	songs.addAll(Arrays.asList(s1, s2));
+	    	songs.addAll(Arrays.asList(s2));
 	    	
 	    	Set<Playlist> playlists = new HashSet<>();
 	    	playlists.addAll(Arrays.asList(p1, p2));

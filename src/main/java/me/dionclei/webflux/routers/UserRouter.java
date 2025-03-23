@@ -15,7 +15,8 @@ public class UserRouter {
 	RouterFunction<ServerResponse> routeUsers(UserHandler handler) {
 		return RouterFunctions.route(GET("users/{id}").and(accept(MediaType.APPLICATION_JSON)), handler::findById)
 				.andRoute(GET("users"), handler::findAll)
-				.andRoute(POST("users"), handler::save);
+				.andRoute(POST("users"), handler::save)
+				.andRoute(POST("users/{userId}/add-song/{songId}"), handler::addSongToFavorites);
 	}
 	
 }
