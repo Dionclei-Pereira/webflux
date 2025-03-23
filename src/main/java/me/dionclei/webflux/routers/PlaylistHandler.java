@@ -18,7 +18,9 @@ import reactor.core.publisher.Mono;
 import static org.springframework.web.reactive.function.BodyInserters.fromPublisher;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 import static org.springframework.web.reactive.function.server.ServerResponse.badRequest;
+import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.badRequest;
@@ -62,13 +64,23 @@ public class PlaylistHandler {
 	
 	public Mono<ServerResponse> getSongsFromPlaylist(ServerRequest request) {
 		String id = request.pathVariable("id");
-		return ok().body(playlistService.getSongsFromPlaylist(id), Song.class);
+		return playlistService.getSongsFromPlaylist(id).collectList()
+				.flatMap(songs -> {
+	                if (songs.isEmpty()) {
+	                    return Mono.error(new ResourceNotFound("Playlist not Found"));
+	                }
+	                return ok().body(playlistService.getSongsFromPlaylist(id), Song.class);
+				})
+				.switchIfEmpty(Mono.error(new ResourceNotFound("Playlist not Found")))
+				.onErrorResume(e -> notFound().build());
 	}
 	
 	public Mono<ServerResponse> findById(ServerRequest request) {
 		String id = request.pathVariable("id");
-		return ok().contentType(MediaType.APPLICATION_JSON)
-				.body(playlistService.findById(id), Playlist.class);
+		return playlistService.findById(id).flatMap(playlist -> ok().contentType(MediaType.APPLICATION_JSON).bodyValue(playlist))
+				.switchIfEmpty(Mono.error(new ResourceNotFound("Playlist not found")))
+				.onErrorResume(e -> notFound().build());
+
 	}
 
 	public Mono<ServerResponse> save(ServerRequest request) {

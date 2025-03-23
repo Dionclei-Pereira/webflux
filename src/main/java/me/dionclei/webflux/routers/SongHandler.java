@@ -14,6 +14,8 @@ import me.dionclei.webflux.services.UserService;
 import reactor.core.publisher.Mono;
 import static org.springframework.web.reactive.function.BodyInserters.fromPublisher;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import static org.springframework.web.reactive.function.server.ServerResponse.badRequest;
+import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
 
 import java.util.Map;
 import java.util.Optional;
@@ -49,8 +51,9 @@ public class SongHandler {
 	}
 	
 	public Mono<ServerResponse> findById(ServerRequest request) {
-		var song = songService.findById(request.pathVariable("id"));
-		return ok().body(song, Song.class);
+		return songService.findById(request.pathVariable("id")).flatMap(song -> ok().body(song, Song.class))
+				.switchIfEmpty(Mono.error(new ResourceNotFound("Song not found")))
+				.onErrorResume(e -> notFound().build());
 	}
 	
 	public Mono<ServerResponse> save(ServerRequest request) {
