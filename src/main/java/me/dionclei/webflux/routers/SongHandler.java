@@ -1,6 +1,8 @@
 package me.dionclei.webflux.routers;
 
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
@@ -20,6 +22,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.no
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
@@ -30,11 +33,16 @@ public class SongHandler {
 	private SongService songService;
 	private UserService userService;
 	private PlaylistService playlistService;
+	private Validator validator;
 	
-	public SongHandler(SongService songService, UserService userService, PlaylistService playlistService) {
+	public SongHandler(SongService songService,
+			UserService userService,
+			PlaylistService playlistService,
+			Validator validator) {
 		this.songService = songService;
 		this.userService = userService;
 		this.playlistService = playlistService;
+		this.validator = validator;
 	}
 	
 	public Mono<ServerResponse> findAll(ServerRequest request) {
@@ -58,28 +66,38 @@ public class SongHandler {
 	
 	public Mono<ServerResponse> save(ServerRequest request) {
 	    return request.bodyToMono(SongCreateRequest.class)
-	            .flatMap(songDto -> userService.findById(songDto.authorId())
-	                    .switchIfEmpty(Mono.error(new ResourceNotFound("User not found")))
-	                    .flatMap(user -> playlistService.findById(songDto.playlistId())
-	                            .switchIfEmpty(Mono.error(new ResourceNotFound("Album not found")))
-	                            .flatMap(playlist -> {
-	                                Song song = new Song();
-	                                BeanUtils.copyProperties(songDto, song);
-	                                song.setId(UUID.randomUUID().toString());
-	                                song.setAuthor(user.name());
-	                                song.setAlbum(playlist.getName());
+	            .flatMap(songDto -> {
+	                var errors = new BeanPropertyBindingResult(songDto, "SongCreateRequest");
+	                validator.validate(songDto, errors);
+	                if (errors.hasErrors()) {
+	                    var errorMessages = errors.getFieldErrors().stream()
+	                            .map(err -> err.getField() + " : " + err.getDefaultMessage())
+	                            .collect(Collectors.toList());
+	                    return ServerResponse.badRequest()
+	                            .contentType(MediaType.APPLICATION_JSON)
+	                            .bodyValue(Map.of("errors", errorMessages));
+	                }
 
-	                                return songService.save(song)
-	                                        .flatMap(savedSong -> {
-	                                            return playlistService.addSong(playlist.getId(), savedSong.getId())
-	                                                    .then(Mono.just(savedSong));
-	                                        })
-	                                        .flatMap(savedSong -> ok()
-	                                                .contentType(MediaType.APPLICATION_JSON)
-	                                                .bodyValue(savedSong));
-	                            })
-	                    )
-	            )
+	                return userService.findById(songDto.authorId())
+	                        .switchIfEmpty(Mono.error(new ResourceNotFound("User not found")))
+	                        .flatMap(user -> playlistService.findById(songDto.playlistId())
+	                                .switchIfEmpty(Mono.error(new ResourceNotFound("Album not found")))
+	                                .flatMap(playlist -> {
+	                                    Song song = new Song();
+	                                    BeanUtils.copyProperties(songDto, song);
+	                                    song.setId(UUID.randomUUID().toString());
+	                                    song.setAuthor(user.name());
+	                                    song.setAlbum(playlist.getName());
+
+	                                    return songService.save(song)
+	                                            .flatMap(savedSong -> playlistService.addSong(playlist.getId(), savedSong.getId())
+	                                                    .then(ServerResponse.ok()
+	                                                            .contentType(MediaType.APPLICATION_JSON)
+	                                                            .bodyValue(savedSong))
+	                                            );
+	                                })
+	                        );
+	            })
 	            .onErrorResume(e -> 
 	                    ServerResponse.badRequest()
 	                            .contentType(MediaType.APPLICATION_JSON)
