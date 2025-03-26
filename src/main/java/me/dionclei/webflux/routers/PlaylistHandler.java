@@ -95,9 +95,10 @@ public class PlaylistHandler {
 	                        playlist.setAuthor(user.name());
 	                        return playlistService.save(playlist)
 	                                .flatMap(savedPlaylist -> 
-	                                    ServerResponse.ok()
-	                                        .contentType(MediaType.APPLICATION_JSON)
-	                                        .bodyValue(savedPlaylist)
+	                                	userService.addPlaylist(user.id(), savedPlaylist.getId())
+	                                	.then(ServerResponse.ok()
+		                                        .contentType(MediaType.APPLICATION_JSON)
+		                                        .bodyValue(savedPlaylist))
 	                                );
 	                    })
 	            )

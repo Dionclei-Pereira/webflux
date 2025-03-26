@@ -19,14 +19,14 @@ public class User {
 	private String email;
 	private String password;
 	private Set<Song> favoriteSongs = new HashSet<>();
-	private Set<Playlist> playlists = new HashSet<>();
+	private Set<String> playlists = new HashSet<>();
 	
 	public User() {
 		super();
 	}
 	
 	public User(String id, String name, String email, String password, Set<Song> favoriteSongs,
-			Set<Playlist> playlists) {
+			Set<String> playlists) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -80,11 +80,11 @@ public class User {
 		this.favoriteSongs = favoriteSongs;
 	}
 
-	public Set<Playlist> getPlaylists() {
+	public Set<String> getPlaylists() {
 		return playlists;
 	}
 
-	public void setPlaylists(Set<Playlist> playlists) {
+	public void setPlaylists(Set<String> playlists) {
 		this.playlists = playlists;
 	}
 

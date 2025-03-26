@@ -52,8 +52,8 @@ public class SeedRunner implements CommandLineRunner {
 	    	Set<Song> songs = new HashSet<>();
 	    	songs.addAll(Arrays.asList(s2));
 	    	
-	    	Set<Playlist> playlists = new HashSet<>();
-	    	playlists.addAll(Arrays.asList(p1, p2));
+	    	Set<String> playlists = new HashSet<>();
+	    	playlists.addAll(Arrays.asList(p1.getId(), p2.getId()));
 	    	
 	    	User u1 = new User(UUID.randomUUID().toString(), "Dionclei", "dionclei@gmail.com", "12345678", songs, playlists);
 	    	

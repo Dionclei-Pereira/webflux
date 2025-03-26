@@ -5,6 +5,6 @@ import java.util.Set;
 import me.dionclei.webflux.documents.Playlist;
 import me.dionclei.webflux.documents.Song;
 
-public record UserDTO(String id, String name, Set<Song> favoriteSongs, Set<Playlist> playlists) {
+public record UserDTO(String id, String name, Set<Song> favoriteSongs, Set<String> playlists) {
 
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import me.dionclei.webflux.documents.Playlist;
 import me.dionclei.webflux.documents.Song;
 import me.dionclei.webflux.documents.User;
 import me.dionclei.webflux.dto.UserDTO;
@@ -63,6 +64,22 @@ public class UserServiceImpl implements UserService {
 	public Mono<Set<Song>> getFavoriteSongsByUserId(String userId) {
 	    return repository.findById(userId)
 	            .map(user -> user.getFavoriteSongs());
+	}
+
+	public Mono<User> addPlaylist(String userId, String playlistId) {
+	    return repository.findById(userId)
+	            .flatMap(u -> {
+	                u.getPlaylists().add(playlistId);
+	                return repository.save(u);
+	            });
+	}
+
+	public Mono<User> removePlaylist(String userId, String playlistId) {
+	    return repository.findById(userId)
+	            .flatMap(u -> {
+	                u.getPlaylists().remove(playlistId);
+	                return repository.save(u);
+	            });
 	}
 
 }
