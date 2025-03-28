@@ -24,7 +24,7 @@ public class SecurityConfig {
 		return http.csrf(c -> c.disable())
 				.authorizeExchange(exchange -> exchange
 						.pathMatchers(HttpMethod.POST, "/auth/**").permitAll()
-						.pathMatchers(HttpMethod.GET, "/users").hasAuthority("ROLE_ADMIN")
+						.pathMatchers(HttpMethod.POST, "/users").hasAuthority("ROLE_ADMIN")
 						.anyExchange().authenticated()
 				)
 				.addFilterBefore(filter, SecurityWebFiltersOrder.AUTHORIZATION)

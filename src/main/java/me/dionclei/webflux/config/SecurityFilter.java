@@ -28,7 +28,6 @@ public class SecurityFilter implements WebFilter{
                 String subject = service.validateToken(token);
                 return repository.findUserByEmail(subject)
                         .flatMap(user -> {
-                        	System.out.println(user.getAuthorities());
                             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                             return chain.filter(exchange)
                             		.contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication));

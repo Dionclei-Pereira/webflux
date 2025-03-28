@@ -16,20 +16,30 @@ public class Playlist {
 	private String id;
 	private String name;
 	private String author;
+	private String authorEmail;
 	private Set<Genre> genres = new HashSet<>();
 	private Set<String> songs = new HashSet<>();
 	
 	public Playlist() {}
 	
-	public Playlist(String id, String name, String author, Set<Genre> genres, Set<String> songs) {
+	public Playlist(String id, String name, String author, String authorEmail, Set<Genre> genres, Set<String> songs) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.author = author;
 		this.genres = genres;
 		this.songs = songs;
+		this.authorEmail = authorEmail;
 	}
 	
+	public String getAuthorEmail() {
+		return authorEmail;
+	}
+
+	public void setAuthorEmail(String authorEmail) {
+		this.authorEmail = authorEmail;
+	}
+
 	public String getAuthor() {
 		return author;
 	}

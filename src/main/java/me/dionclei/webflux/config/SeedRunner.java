@@ -36,16 +36,16 @@ public class SeedRunner implements CommandLineRunner {
 	    	userRepository.deleteAll().subscribe();
 	    	Set<Genre> aux = new HashSet<>();
 	    	aux.add(Genre.ROCK);
-	        Playlist p1 = new Playlist(UUID.randomUUID().toString(), "Van Halen", "Dionclei", aux, new HashSet<>());
+	        Playlist p1 = new Playlist(UUID.randomUUID().toString(), "Van Halen", "Dionclei", "dionclei@gmail.com", aux, new HashSet<>());
 	        aux = new HashSet<>();
 	        aux.add(Genre.METAL);
-	        Playlist p2 = new Playlist(UUID.randomUUID().toString(), "The Best Metal", "Dionclei", aux, new HashSet<>());
+	        Playlist p2 = new Playlist(UUID.randomUUID().toString(), "The Best Metal", "Dionclei", "dionclei@gmail.com", aux, new HashSet<>());
 	        
 	    	songRepository.deleteAll().subscribe();
 	    	aux = new HashSet<>();
 	    	aux.add(Genre.ROCK);
-	    	Song s1 = new Song(UUID.randomUUID().toString(), "D.O.A", "Van Halen", "Van Halen II", "https://open.spotify.com/track/5tLbWNYxXdGRQQmW7LtWjg", aux);
-	    	Song s2 = new Song(UUID.randomUUID().toString(), "Eruption", "Van Halen", "Van Halen I", "https://open.spotify.com/track/3lW0MLws0srqqR3DRRPLZp", aux);
+	    	Song s1 = new Song(UUID.randomUUID().toString(), "D.O.A", "Van Halen", "vanhalen@gmail.com", "Van Halen II", "https://open.spotify.com/track/5tLbWNYxXdGRQQmW7LtWjg", aux);
+	    	Song s2 = new Song(UUID.randomUUID().toString(), "Eruption", "Van Halen", "vanhalen@gmail.com", "Van Halen I", "https://open.spotify.com/track/3lW0MLws0srqqR3DRRPLZp", aux);
 	    	Set<String> aux2 = new HashSet<>();
 	    	aux2.add(s2.getId());
 	    	p2.setSongs(aux2);

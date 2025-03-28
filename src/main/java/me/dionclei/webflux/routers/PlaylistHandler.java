@@ -1,8 +1,10 @@
 package me.dionclei.webflux.routers;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
+import static org.springframework.web.reactive.function.server.ServerResponse.badRequest;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
+import java.security.Principal;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -84,7 +86,8 @@ public class PlaylistHandler {
 	
 	public Mono<ServerResponse> findById(ServerRequest request) {
 		String id = request.pathVariable("id");
-		return playlistService.findById(id).flatMap(playlist -> ok().contentType(MediaType.APPLICATION_JSON).bodyValue(playlist))
+		return playlistService.findById(id).flatMap(playlist -> 
+				ok().contentType(MediaType.APPLICATION_JSON).bodyValue(playlist))
 				.switchIfEmpty(Mono.error(new ResourceNotFound("Playlist not found")))
 				.onErrorResume(e -> notFound().build());
 
@@ -109,6 +112,7 @@ public class PlaylistHandler {
                                 playlist.setId(UUID.randomUUID().toString());
                                 BeanUtils.copyProperties(playlistDto, playlist);
                                 playlist.setAuthor(user.name());
+                                playlist.setAuthorEmail(user.userEmail());
                                 return playlistService.save(playlist)
                                         .flatMap(savedPlaylist ->
                                             userService.addPlaylist(user.id(), savedPlaylist.getId())

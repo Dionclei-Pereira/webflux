@@ -15,6 +15,7 @@ public class Song {
 	private String id;
 	private String name;
 	private String author;
+	private String authorEmail;
 	private String album;
 	private String link;
 	private Set<Genre> genres = new HashSet<>();
@@ -23,14 +24,23 @@ public class Song {
 		super();
 	}
 
-	public Song(String id, String name, String author, String album, String link, Set<Genre> genres) {
+	public Song(String id, String name, String author, String authorEmail, String album, String link, Set<Genre> genres) {
 		super();
 		this.id = id;
 		this.author = author;
 		this.album = album;
+		this.authorEmail = authorEmail;
 		this.link = link;
 		this.name = name;
 		this.genres = genres;
+	}
+	
+	public String getAuthorEmail() {
+		return authorEmail;
+	}
+
+	public void setAuthorEmail(String authorEmail) {
+		this.authorEmail = authorEmail;
 	}
 
 	public String getId() {

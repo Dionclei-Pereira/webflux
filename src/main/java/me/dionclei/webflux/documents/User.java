@@ -58,7 +58,7 @@ public class User implements UserDetails {
 	}
 	
 	public UserDTO toDTO() {
-		return new UserDTO(id, name, favoriteSongs, playlists);
+		return new UserDTO(id, name, email, favoriteSongs, playlists);
 	}
 	
 	public String getId() {
