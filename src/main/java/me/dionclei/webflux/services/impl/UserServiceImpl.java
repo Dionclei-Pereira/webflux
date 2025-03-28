@@ -31,6 +31,10 @@ public class UserServiceImpl implements UserService {
 	public Mono<UserDTO> findById(String id) {
 		return repository.findById(id).map(u -> u.toDTO()).subscribeOn(Schedulers.boundedElastic());
 	}
+	
+	public Mono<User> findByEmail(String email) {
+		return repository.findUserByEmail(email).subscribeOn(Schedulers.boundedElastic());
+	}
 
 	public Flux<UserDTO> findAll() {
 		return repository.findAll().map(u -> u.toDTO()).subscribeOn(Schedulers.boundedElastic());
@@ -58,19 +62,19 @@ public class UserServiceImpl implements UserService {
 	    			u.setFavoriteSongs(songs);
 	    			return repository.save(u);
 	    		}).map(u -> u.getFavoriteSongs())
-	    		.flatMapMany(Flux::fromIterable);
+	    		.flatMapMany(Flux::fromIterable).subscribeOn(Schedulers.boundedElastic());
 	}
 
 	public Mono<Set<Song>> getFavoriteSongsByUserId(String userId) {
 	    return repository.findById(userId)
-	            .map(user -> user.getFavoriteSongs());
+	            .map(user -> user.getFavoriteSongs()).subscribeOn(Schedulers.boundedElastic());
 	}
 
 	public Mono<User> addPlaylist(String userId, String playlistId) {
 	    return repository.findById(userId)
 	            .flatMap(u -> {
 	                u.getPlaylists().add(playlistId);
-	                return repository.save(u);
+	                return repository.save(u).subscribeOn(Schedulers.boundedElastic());
 	            });
 	}
 
@@ -78,7 +82,7 @@ public class UserServiceImpl implements UserService {
 	    return repository.findById(userId)
 	            .flatMap(u -> {
 	                u.getPlaylists().remove(playlistId);
-	                return repository.save(u);
+	                return repository.save(u).subscribeOn(Schedulers.boundedElastic());
 	            });
 	}
 

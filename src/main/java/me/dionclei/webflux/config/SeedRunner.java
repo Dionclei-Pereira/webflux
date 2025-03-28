@@ -13,6 +13,7 @@ import me.dionclei.webflux.documents.Playlist;
 import me.dionclei.webflux.documents.Song;
 import me.dionclei.webflux.documents.User;
 import me.dionclei.webflux.enums.Genre;
+import me.dionclei.webflux.enums.UserRole;
 import me.dionclei.webflux.repositories.PlaylistRepository;
 import me.dionclei.webflux.repositories.SongRepository;
 import me.dionclei.webflux.repositories.UserRepository;
@@ -55,9 +56,11 @@ public class SeedRunner implements CommandLineRunner {
 	    	Set<String> playlists = new HashSet<>();
 	    	playlists.addAll(Arrays.asList(p1.getId(), p2.getId()));
 	    	
-	    	User u1 = new User(UUID.randomUUID().toString(), "Dionclei", "dionclei@gmail.com", "12345678", songs, playlists);
+	    	User u1 = new User(UUID.randomUUID().toString(), "Dionclei", "dionclei@gmail.com", "12345678", songs, playlists, UserRole.ADMIN);
+	    	User u2 = new User(UUID.randomUUID().toString(), "Pedro", "pedro@gmail.com", "123456788", null, null);
 	    	
-	    	userRepository.save(u1).subscribe();
+	    	
+	    	userRepository.saveAll(Arrays.asList(u1, u2)).subscribe();
 	    	songRepository.saveAll(Arrays.asList(s1, s2)).subscribe();
 	    	playlistRepository.saveAll(Arrays.asList(p1, p2)).subscribe();
 	    	

@@ -15,6 +15,8 @@ public interface UserService {
 	
 	Mono<UserDTO> findById(String id);
 	
+	Mono<User> findByEmail(String email);
+	
 	Flux<UserDTO> findAll();
 	
 	Mono<Set<Song>> getFavoriteSongsByUserId(String id);

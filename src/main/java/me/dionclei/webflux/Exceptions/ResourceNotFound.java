@@ -1,4 +1,4 @@
-package me.dionclei.webflux.Exceptions;
+package me.dionclei.webflux.exceptions;
 
 public class ResourceNotFound extends RuntimeException {
 	

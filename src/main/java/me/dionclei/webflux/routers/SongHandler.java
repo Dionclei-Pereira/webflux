@@ -6,10 +6,10 @@ import org.springframework.validation.Validator;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import me.dionclei.webflux.Exceptions.ResourceNotFound;
 import me.dionclei.webflux.documents.Song;
 import me.dionclei.webflux.dto.SongCreateRequest;
 import me.dionclei.webflux.enums.Genre;
+import me.dionclei.webflux.exceptions.ResourceNotFound;
 import me.dionclei.webflux.services.PlaylistService;
 import me.dionclei.webflux.services.SongService;
 import me.dionclei.webflux.services.UserService;
