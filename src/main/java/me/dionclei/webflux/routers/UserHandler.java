@@ -1,12 +1,9 @@
 package me.dionclei.webflux.routers;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import me.dionclei.webflux.documents.Playlist;
-import me.dionclei.webflux.documents.Song;
 import me.dionclei.webflux.documents.User;
 import me.dionclei.webflux.dto.UserDTO;
 import me.dionclei.webflux.exceptions.ResourceNotFound;
@@ -15,7 +12,6 @@ import reactor.core.publisher.Mono;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
-import static org.springframework.web.reactive.function.server.ServerResponse.badRequest;
 import static org.springframework.web.reactive.function.BodyInserters.fromPublisher;
 
 import org.springframework.http.MediaType;

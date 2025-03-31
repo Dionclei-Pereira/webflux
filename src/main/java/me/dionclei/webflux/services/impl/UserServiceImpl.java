@@ -5,7 +5,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import me.dionclei.webflux.documents.Playlist;
 import me.dionclei.webflux.documents.Song;
 import me.dionclei.webflux.documents.User;
 import me.dionclei.webflux.dto.UserDTO;

@@ -2,7 +2,6 @@ package me.dionclei.webflux.services;
 
 import java.util.Set;
 
-import me.dionclei.webflux.documents.Playlist;
 import me.dionclei.webflux.documents.Song;
 import me.dionclei.webflux.documents.User;
 import me.dionclei.webflux.dto.UserDTO;

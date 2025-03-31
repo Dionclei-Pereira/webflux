@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +18,7 @@ import me.dionclei.webflux.enums.UserRole;
 
 @Document
 public class User implements UserDetails {
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	private String id;
