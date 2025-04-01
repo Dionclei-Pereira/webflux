@@ -13,9 +13,6 @@ public record SongCreateRequest(
 		@Size(min = 3, max = 20, message = "Name must be between 3 and 20")
 		String name,
 		
-		@NotBlank(message = "AuthorId is required")
-		String authorId,
-		
 		@NotBlank(message = "PlaylistId is required")
 		String playlistId,
 		

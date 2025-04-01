@@ -12,10 +12,7 @@ public record PlaylistCreateRequest(
 		@NotBlank(message = "Name is required")
 		@Size(min = 3, max = 20, message = "Name must be between 3 and 20")
 		String name,
-		@NotBlank(message = "AuthorId is required")
-		String authorId,
 		@NotEmpty(message = "Genres is required")
-		Set<Genre> genres, 
-		Set<String> songs) {
+		Set<Genre> genres) {
 
 }

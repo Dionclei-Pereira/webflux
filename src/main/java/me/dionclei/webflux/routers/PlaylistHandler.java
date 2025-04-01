@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -40,7 +41,7 @@ public class PlaylistHandler {
 	}
 	
 	public Mono<ServerResponse> findAll(ServerRequest request) {
-		var genreStr = request.queryParam("gender");
+		var genreStr = request.queryParam("genre");
 		if (genreStr.isPresent()) {
 			Genre genre = genreStr.map(String::toUpperCase)
             .map(Genre::valueOf)
@@ -54,17 +55,21 @@ public class PlaylistHandler {
 	public Mono<ServerResponse> addSongToPlaylist(ServerRequest request) {
 		String playlistId = request.pathVariable("playlistId");
 		String songId = request.pathVariable("songId");
-		return playlistService.addSong(playlistId, songId)
-				.flatMap(playlist -> 
-				ok().contentType(MediaType.APPLICATION_JSON).body(playlist, Playlist.class))
-				.onErrorResume(IllegalArgumentException.class, e -> {
-	                return ServerResponse.badRequest()
-	                        .contentType(MediaType.APPLICATION_JSON)
-	                        .bodyValue("Song or Playlist not found");
-	            })
-	            .switchIfEmpty(
-	                ServerResponse.notFound().build()
-	            );
+		return request.principal()
+				.flatMap(principal -> 
+					userService.findByEmail(principal.getName())
+						.flatMap(user -> 
+							playlistService.findById(playlistId)
+								.flatMap(playlist -> {
+									if(playlist.getAuthor().equals(user.getName())) {
+										return playlistService.addSong(playlistId, songId)
+												.flatMap(savedPlaylist -> ok().bodyValue(savedPlaylist));
+									}
+									return ServerResponse.status(HttpStatus.FORBIDDEN).build();
+								}).switchIfEmpty(ServerResponse.notFound().build())
+								.onErrorResume(IllegalArgumentException.class, e -> notFound().build())
+						).switchIfEmpty(ServerResponse.notFound().build())
+				);
 	}
 	
 	public Mono<ServerResponse> getSongsFromPlaylist(ServerRequest request) {
@@ -89,37 +94,37 @@ public class PlaylistHandler {
 
 	}
 
-    public Mono<ServerResponse> save(ServerRequest request) {
-        return request.bodyToMono(PlaylistCreateRequest.class)
-                .flatMap(playlistDto -> {
-                    Errors errors = new BeanPropertyBindingResult(playlistDto, "playlistCreateRequest");
-                    validator.validate(playlistDto, errors);
-                    if (errors.hasErrors()) {
-                        var errorMessages = errors.getFieldErrors().stream()
-                                .map(err -> err.getField() + ": " + err.getDefaultMessage())
-                                .collect(Collectors.toList());
-                        return ServerResponse.badRequest().bodyValue(errorMessages);
-                    }
-
-                    return userService.findById(playlistDto.authorId())
-                            .switchIfEmpty(Mono.error(new ResourceNotFound("User not found")))
-                            .flatMap(user -> {
-                                Playlist playlist = new Playlist();
-                                playlist.setId(UUID.randomUUID().toString());
-                                BeanUtils.copyProperties(playlistDto, playlist);
-                                playlist.setAuthor(user.name());
-                                playlist.setAuthorEmail(user.userEmail());
-                                return playlistService.save(playlist)
-                                        .flatMap(savedPlaylist ->
-                                            userService.addPlaylist(user.id(), savedPlaylist.getId())
-                                                    .then(ServerResponse.ok()
-                                                            .contentType(MediaType.APPLICATION_JSON)
-                                                            .bodyValue(savedPlaylist))
-                                        );
-                            });
-                })
-                .onErrorResume(e -> ServerResponse.badRequest()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(e.getMessage()));
-    }
+	public Mono<ServerResponse> save(ServerRequest request) {
+	    return request.bodyToMono(PlaylistCreateRequest.class)
+	        .flatMap(playlistDto -> {
+	            Errors errors = new BeanPropertyBindingResult(playlistDto, "playlistCreateRequest");
+	            validator.validate(playlistDto, errors);
+	            if (errors.hasErrors()) {
+	                var errorMessages = errors.getFieldErrors().stream()
+	                    .map(err -> err.getField() + ": " + err.getDefaultMessage())
+	                    .collect(Collectors.toList());
+	                return ServerResponse.badRequest().bodyValue(errorMessages);
+	            }
+	            return request.principal().flatMap(principal -> 
+	                userService.findByEmail(principal.getName())
+	                    .flatMap(user -> {
+	                        var playlist = new Playlist();
+	                        playlist.setId(UUID.randomUUID().toString());
+	                        BeanUtils.copyProperties(playlistDto, playlist);
+	                        playlist.setAuthor(user.getName());
+	                        playlist.setAuthorEmail(user.getEmail());
+	                        return playlistService.save(playlist)
+	                            .flatMap(savedPlaylist -> 
+	                                userService.addPlaylist(user.getId(), savedPlaylist.getId())
+	                                    .then(ServerResponse.ok()
+	                                        .contentType(MediaType.APPLICATION_JSON)
+	                                        .bodyValue(savedPlaylist))
+	                            );
+	                    })
+	            );
+	        })
+	        .onErrorResume(e -> ServerResponse.badRequest()
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .bodyValue(e.getMessage()));
+	}
 }

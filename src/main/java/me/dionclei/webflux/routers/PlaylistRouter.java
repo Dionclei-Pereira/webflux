@@ -18,7 +18,7 @@ public class PlaylistRouter {
 				.andRoute(GET("playlists/{id}").and(accept(MediaType.APPLICATION_JSON)), handler::findById)
 				.andRoute(POST("playlists").and(accept(MediaType.APPLICATION_JSON)), handler::save)
 				.andRoute(GET("playlists/{id}/songs").and(accept(MediaType.APPLICATION_JSON)), handler::getSongsFromPlaylist)
-				.andRoute(PUT("playlists/{playlistId}/add-song/{songId}"), handler::addSongToPlaylist);
+				.andRoute(PUT("playlists/{playlistId}/songs/{songId}"), handler::addSongToPlaylist);
 	}
 	
 }
