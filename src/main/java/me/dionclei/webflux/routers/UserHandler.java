@@ -14,6 +14,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
 import static org.springframework.web.reactive.function.BodyInserters.fromPublisher;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @Component
@@ -47,12 +48,23 @@ public class UserHandler {
 	public Mono<ServerResponse> removeSongToFavorites(ServerRequest request) {
 	    String userId = request.pathVariable("userId");
 	    String songId = request.pathVariable("songId");
+	    
 	    return service.removeSongFromFavorites(userId, songId)
 	            .collectList()
-	            .flatMap(songs -> 
-	                ServerResponse.ok()
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .bodyValue(songs)
+	            .flatMap(songs -> request.principal()
+	            		.flatMap(principal -> 
+	            			service.findByEmail(principal.getName()).flatMap(user ->
+	            				service.findById(userId).flatMap(targetUser -> {
+		            				if(!principal.getName().equals(targetUser.userEmail()) && user.getAuthorities()
+		            						.stream().noneMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
+		            					return ServerResponse.status(HttpStatus.FORBIDDEN).build();
+		            				}
+			            			return ServerResponse.ok()
+			        	                    .contentType(MediaType.APPLICATION_JSON)
+			        	                    .bodyValue(songs);
+	            				})
+	            			)
+	            		 )
 	            )
 	            .onErrorResume(IllegalArgumentException.class, e -> 
 	                ServerResponse.badRequest()
@@ -69,10 +81,21 @@ public class UserHandler {
 	    String songId = request.pathVariable("songId");
 	    return service.addSongToFavorites(userId, songId)
 	            .collectList()
-	            .flatMap(songs -> 
-	                ServerResponse.ok()
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .bodyValue(songs)
+	            .flatMap(songs -> request.principal()
+	            		.flatMap(principal -> 
+	            			service.findByEmail(principal.getName())
+	            				.flatMap(user -> 
+	            					service.findById(userId).flatMap(targetUser -> {
+	            						if(!principal.getName().equals(targetUser.userEmail()) && 
+	            								user.getAuthorities().stream().noneMatch(auth -> auth.getAuthority().equals("USER_ADMIN"))) {
+	            							return ServerResponse.status(HttpStatus.FORBIDDEN).build();
+	            						}
+		            					return ServerResponse.ok()
+		    	        	                    .contentType(MediaType.APPLICATION_JSON)
+		    	        	                    .bodyValue(songs);
+	            					})
+	            				)
+	            		)
 	            )
 	            .onErrorResume(IllegalArgumentException.class, e -> 
 	                ServerResponse.badRequest()
@@ -83,12 +106,5 @@ public class UserHandler {
 	                ServerResponse.notFound().build()
 	            );
 	}
-	
-	public Mono<ServerResponse> save(ServerRequest request) {
-		var user = request.bodyToMono(User.class);
-		return ok().contentType(MediaType.APPLICATION_JSON).body(fromPublisher(user.flatMap(service::save), UserDTO.class));
-	}
-	
-
 	
 }

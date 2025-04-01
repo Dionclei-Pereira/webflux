@@ -16,8 +16,7 @@ public class UserRouter {
 		return RouterFunctions.route(GET("users/{id}").and(accept(MediaType.APPLICATION_JSON)), handler::findById)
 				.andRoute(GET("users"), handler::findAll)
 				.andRoute(GET("users/{id}/songs"), handler::findFavoriteSongs)
-				.andRoute(POST("users"), handler::save)
-				.andRoute(POST("users/{userId}/add-song/{songId}"), handler::addSongToFavorites)
+				.andRoute(POST("users/{userId}/songs/{songId}"), handler::addSongToFavorites)
 				.andRoute(DELETE("users/{userId}/songs/{songId}"), handler::removeSongToFavorites);
 	}
 	

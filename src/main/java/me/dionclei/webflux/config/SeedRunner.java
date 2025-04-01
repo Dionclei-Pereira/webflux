@@ -56,7 +56,7 @@ public class SeedRunner implements CommandLineRunner {
 	    	playlists.addAll(Arrays.asList(p1.getId(), p2.getId()));
 	    	
 	    	User u1 = new User(UUID.randomUUID().toString(), "Dionclei", "dionclei@gmail.com", "12345678", songs, playlists, UserRole.ADMIN);
-	    	User u2 = new User(UUID.randomUUID().toString(), "Pedro", "pedro@gmail.com", "123456788", null, null);
+	    	User u2 = new User(UUID.randomUUID().toString(), "Pedro", "pedro@gmail.com", "123456788", songs, null);
 	    	
 	    	
 	    	userRepository.saveAll(Arrays.asList(u1, u2)).subscribe();
