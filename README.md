@@ -14,19 +14,19 @@ This project implements a reactive backend. The main objective is to create an A
 
 The main technologies used in this project are:
 
-- ✅ Java 21 
-- ✅ Spring Boot
-- ✅ WebFlux
-- ✅ Project Reactor
-- ✅ MongoDB
-- ✅ Spring Security
-- ✅ JWT - HMAC
+- ☕ Java 21 
+- 🌱 Spring Boot
+- 🔄 WebFlux
+- ⚛️ Project Reactor
+- 🍃 MongoDB
+- 🛡️ Spring Security
+- 🔐 JWT - HMAC
 
 ## 🎯 **Features**
-- ✅ Users  
-- ✅ Authentication
-- ✅ Songs  
-- ✅ Playlists
+- 👤 Users  
+- 🔑 Authentication
+- 🎵 Songs  
+- 🎧 Playlists
 
 ## ⚙ Prerequisites
 
